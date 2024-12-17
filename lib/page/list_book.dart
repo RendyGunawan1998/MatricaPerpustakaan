@@ -25,17 +25,49 @@ class _ListBookScreenState extends State<ListBookScreen> {
       ),
       body: Column(
         children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              decoration: InputDecoration(
+                hintText: "Cari Buku...",
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.search),
+              ),
+              onChanged: controller.updateSearchQuery,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Obx(() {
+              return DropdownButton<String>(
+                isExpanded: true,
+                hint: Text("Filter Tahun"),
+                value: controller.selectYear.value.isEmpty
+                    ? null
+                    : controller.selectYear.value,
+                items: [
+                  DropdownMenuItem(value: "", child: Text("Semua Tahun")),
+                  DropdownMenuItem(value: "2021", child: Text("2021")),
+                  DropdownMenuItem(value: "2022", child: Text("2022")),
+                  DropdownMenuItem(value: "2023", child: Text("2023")),
+                ],
+                onChanged: (value) {
+                  controller.updateSelectedYear(value ?? "");
+                },
+              );
+            }),
+          ),
           Expanded(
             child: Obx(
               () {
-                if (controller.books.isEmpty) {
+                if (controller.filterBook.isEmpty) {
                   return Center(child: Text('No Data...'));
                 } else {
                   return ListView.builder(
                     shrinkWrap: true,
-                    itemCount: controller.books.length,
+                    itemCount: controller.filterBook.length,
                     itemBuilder: (context, index) {
-                      final book = controller.books[index];
+                      final book = controller.filterBook[index];
                       return Padding(
                         padding: EdgeInsets.all(10),
                         child: InkWell(
